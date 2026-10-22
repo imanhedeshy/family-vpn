@@ -1,0 +1,27 @@
+name: Source checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  signed-pass-verifier:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 26.7.0
+      - name: Run synthetic pass validation checks
+        run: node tests/familyPass.mjs
+      - name: Check private file exclusions
+        shell: python
+        run: |
+          import subprocess
+          names = subprocess.check_output(['git', 'ls-files', '-z']).decode().split(chr(0))
+          forbidden = ('.familyvpn', '.p12', '.pfx', '.keystore', '.mobileprovision')
+          assert not any(n.endswith(forbidden) or n.endswith('signing.local.json') for n in names)

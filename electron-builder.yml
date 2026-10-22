@@ -1,4 +1,4 @@
-productName: sing-box
+productName: Family VPN
 copyright: nekohasekai
 publish: null
 afterPack: scripts/afterPack.cjs
@@ -42,12 +42,13 @@ extraResources:
   - from: resources/icons/512x512.png
     to: icons/512x512.png
 fileAssociations:
-  - ext: bpf
-    name: sing-box profile
-    description: sing-box profile
-    mimeType: application/x-sing-box-profile
+  - ext: familyvpn
+    name: Family VPN pass
+    description: Personal signed Family VPN pass
+    mimeType: application/x-familyvpn
 win:
-  appId: io.nekohasekai.sfw
+  appId: ca.adatechsolutions.familyvpn.windows
+  executableName: Family VPN
   forceCodeSigning: true
   icon: resources/icon.ico
   signtoolOptions:
@@ -58,8 +59,8 @@ win:
       to: tray.ico
     - from: resources/trayStopped.ico
       to: trayStopped.ico
-    - from: bin/windows/${arch}/sing-box-daemon.exe
-      to: daemon/sing-box-daemon.exe
+    - from: bin/windows/${arch}/family-vpn-daemon.exe
+      to: daemon/family-vpn-daemon.exe
     - from: bin/windows/${arch}
       to: daemon
       filter:
@@ -80,7 +81,7 @@ win:
       to: native/windows_share.node
   target:
     - nsis
-  artifactName: SFW-${version}-${env.SFW_ARCHITECTURE}.${ext}
+  artifactName: Family-VPN-Windows-${version}-${env.SFW_ARCHITECTURE}.${ext}
 nsis:
   oneClick: false
   buildUniversalInstaller: false
@@ -95,7 +96,7 @@ nsis:
   allowToChangeInstallationDirectory: false
   deleteAppDataOnUninstall: false
   include: build/installer.nsh
-  artifactName: SFW-${version}-${env.SFW_ARCHITECTURE}.${ext}
+  artifactName: Family-VPN-Windows-${version}-${env.SFW_ARCHITECTURE}.${ext}
 linux:
   appId: io.nekohasekai.sfl
   syncDesktopName: true

@@ -13,7 +13,7 @@ const repairSupported = process.platform === "win32" || process.platform === "li
 
 export function daemonBinaryPath(): string {
   const binaryName =
-    process.platform === "win32" ? "sing-box-daemon.exe" : "sing-box-daemon";
+    process.platform === "win32" ? "family-vpn-daemon.exe" : "family-vpn-daemon";
   if (app.isPackaged) {
     return join(process.resourcesPath, "daemon", binaryName);
   }
@@ -50,8 +50,8 @@ export function bundledDaemonVersion(): Promise<string | null> {
       }
       const versionLine = result.stdout
         .split("\n")
-        .find((line) => line.startsWith("sing-box-daemon version "));
-      return versionLine?.slice("sing-box-daemon version ".length).trim() || null;
+        .find((line) => line.startsWith("family-vpn-daemon version "));
+      return versionLine?.slice("family-vpn-daemon version ".length).trim() || null;
     } catch {
       return null;
     }

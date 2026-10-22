@@ -21,6 +21,7 @@ import { serviceStartOptions } from "./settings";
 import { userAgent } from "./userAgent";
 import { applicationService } from "./worker";
 import { daemonState } from "./state";
+import { signedFamilyStartContent } from "./family";
 
 const MINIMUM_UPDATE_INTERVAL_MINUTES = 15;
 const DEFAULT_UPDATE_INTERVAL_MINUTES = 60;
@@ -334,7 +335,7 @@ async function startServiceWithContent(content: string): Promise<void> {
     throw new Error("daemon is not available");
   }
   await desktopService.startService({
-    configContent: content,
+    configContent: process.platform === "win32" ? await signedFamilyStartContent() : content,
     options: await serviceStartOptions(),
   });
 }
@@ -712,4 +713,31 @@ export function registerProfiles() {
     },
   );
   reconfigureAutoUpdate();
+}
+
+// Stable private profile identity; never duplicate it or reset user choices.
+export async function applyFamilyProfile(accountID: string, name: string, content: string, select: boolean): Promise<void> {
+  const id = `family-${accountID}`;
+  await runProfileOperation(id, async () => {
+    await atomicWriteFile(contentPath(id), content);
+    const store = settingsDatabase();
+    store.transaction(() => {
+      store.prepare(`INSERT INTO profiles
+        (id,name,type,remote_url,auto_update,auto_update_interval_minutes,last_updated,item_order)
+        VALUES (?,?,'local',NULL,0,60,NULL,(SELECT COALESCE(MAX(item_order)+1,0) FROM profiles))
+        ON CONFLICT(id) DO UPDATE SET name=excluded.name,type='local',remote_url=NULL,auto_update=0`)
+        .run(id,name);
+      if (select || selectedProfileId() === null) writeSelectedProfileId(id);
+    })();
+    notifyChanged();
+  });
+}
+
+export async function removeFamilyProfile(accountID: string): Promise<void> {
+  const id = `family-${accountID}`;
+  await runProfileOperation(id, async () => {
+    settingsDatabase().prepare("DELETE FROM profiles WHERE id = ?").run(id);
+    await unlink(contentPath(id)).catch(() => {});
+    notifyChanged();
+  });
 }

@@ -17,7 +17,7 @@ if (process.platform === "win32" && app.isPackaged) {
 } else {
   const defaultSocketPath =
     process.platform === "win32"
-      ? "\\\\.\\pipe\\ProtectedPrefix\\Administrators\\sing-box"
+      ? "\\\\.\\pipe\\ProtectedPrefix\\Administrators\\family-vpn"
       : process.platform === "linux"
         ? "/run/sing-box.socket"
         : null;

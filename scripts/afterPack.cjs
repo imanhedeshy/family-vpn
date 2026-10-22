@@ -32,7 +32,7 @@ exports.afterPack = async (context) => {
     return;
   }
   for (const relativePath of [
-    ["daemon", "sing-box-daemon.exe"],
+    ["daemon", "family-vpn-daemon.exe"],
     ["native", "windows_share.node"],
   ]) {
     const executablePath = path.join(context.appOutDir, "resources", ...relativePath);

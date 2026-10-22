@@ -1,0 +1,13 @@
+{
+  "product": "Family VPN",
+  "published_platform": "Windows",
+  "reviewed_input_sha256": "8f38a0ff690cbf77c56193c0fcbd2c6913b7a370424f46486321d9aa19fe23cf",
+  "upstream": {
+    "desktop": "2c3ba5cabfe039d4f46561218cfb3a2934e40d29",
+    "dashboard": "3e4bf08e5bf5b9417cf9c36e5a2d5abcb21bdd34",
+    "core": "7054cac5124465ffdb145870d7c01885566711b1"
+  },
+  "other_platform_source_publication": "Pending; coordinated installer release not ready",
+  "personal_credentials_included": false,
+  "release_ready": false
+}

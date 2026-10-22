@@ -264,7 +264,7 @@ async function runWindowsElectronBuilder(
   artifactArchitecture: string,
   signingConfiguration: WindowsSigningConfiguration,
 ): Promise<void> {
-  const artifactName = `SFW-\${version}-${artifactArchitecture}${developmentPackage ? "-dev" : ""}.\${ext}`;
+  const artifactName = `Family-VPN-Windows-\${version}-${artifactArchitecture}${developmentPackage ? "-dev" : ""}.\${ext}`;
   const unpackedDirectory = {
     x64: "win-unpacked",
     x86: "win-ia32-unpacked",
@@ -361,7 +361,7 @@ async function packageWindowsArchitecture(artifactArchitecture: string) {
   if (architecture === undefined) {
     throw new Error(`unknown Windows architecture: ${artifactArchitecture}`);
   }
-  const stagedPaths = ["sing-box-daemon.exe", "windows_share.node"];
+  const stagedPaths = ["family-vpn-daemon.exe", "windows_share.node"];
   if (architecture.includesCronet) {
     stagedPaths.push("libcronet.dll");
   }
@@ -429,7 +429,7 @@ async function packageWindows() {
         "bin",
         "windows",
         architecture.builderArchitectureName,
-        "sing-box-daemon.exe",
+        "family-vpn-daemon.exe",
       );
       await buildBoxdd("windows", architecture.goArchitecture, outputPath);
       verifyPortableExecutableArchitecture(

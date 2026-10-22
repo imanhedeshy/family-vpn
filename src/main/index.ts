@@ -18,6 +18,7 @@ import type {
   TaildropSendFile,
   TitleBarOverlayColors,
 } from "../shared/ipc";
+import { importFamilyPassFile, initializeFamilyVPN } from "./family";
 import { configureApplicationPaths } from "./applicationPaths";
 import {
   archiveNativeCrashDumps,
@@ -113,6 +114,7 @@ if (process.platform === "linux" && app.commandLine.getSwitchValue("ozone-platfo
   applyDisplayScaleFactor();
 }
 
+app.setName("Family VPN");
 configureApplicationPaths(developmentSwitchValue("user-data"));
 
 crashReporter.start({ submitURL: "", uploadToServer: false, compress: false });
@@ -294,14 +296,14 @@ function parseDeepLink(link: string): URL | null {
   } catch {
     return null;
   }
-  if (parsed.protocol !== "sing-box:") {
+  if (parsed.protocol !== "familyvpn:") {
     return null;
   }
   if (parsed.host !== "") {
     return parsed;
   }
   try {
-    return new URL(`sing-box://${parsed.pathname}${parsed.search}${parsed.hash}`);
+    return new URL(`familyvpn://${parsed.pathname}${parsed.search}${parsed.hash}`);
   } catch {
     return null;
   }
@@ -383,6 +385,10 @@ function handleNotificationOpen(openURL: string) {
 }
 
 function handleProfileFile(path: string) {
+  if (path.toLowerCase().endsWith(".familyvpn")) {
+    void importFamilyPassFile(path).catch(() => dialog.showErrorBox("Family VPN", "Your pass could not be applied. Open your current personal .familyvpn file; your saved pass is retained."));
+    return;
+  }
   void readFile(path).then(
     (data) => {
       sendWhenLoaded(PROFILE_FILE_IMPORT, {
@@ -413,20 +419,20 @@ function deliverTaildropSend(files: TaildropSendFile[]) {
 const queueTaildropSend = createTaildropSendBatcher(deliverTaildropSend);
 
 function deepLinkFromArguments(argv: string[]): string | undefined {
-  return argv.find((argument) => argument.startsWith("sing-box://"));
+  return argv.find((argument) => argument.startsWith("familyvpn://"));
 }
 
 function profileFileFromArguments(argv: string[]): string | undefined {
-  return argv.find((argument) => argument.toLowerCase().endsWith(".bpf"));
+  return argv.find((argument) => /\.(bpf|familyvpn)$/i.test(argument));
 }
 
 const singleInstanceLock = app.requestSingleInstanceLock();
 if (!singleInstanceLock) {
   app.quit();
 } else {
-  app.setAsDefaultProtocolClient("sing-box");
+  app.setAsDefaultProtocolClient("familyvpn");
   if (process.platform === "win32") {
-    app.setAppUserModelId("io.nekohasekai.sfw");
+    app.setAppUserModelId("ca.adatechsolutions.familyvpn.windows");
   }
 
   app.on("second-instance", (_event, argv, workingDirectory) => {
@@ -530,6 +536,7 @@ if (!singleInstanceLock) {
       handleProfileFile(profileFile);
     }
     queueTaildropSend(taildropPaths);
+    void initializeFamilyVPN(Boolean(profileFile)).catch(() => dialog.showErrorBox("Family VPN", "Open your current personal pass file to finish or recover your VPN setup."));
     void runStartupUpdateCheck(() => sendWhenLoaded(UPDATES_PRESENT, null));
   });
 }

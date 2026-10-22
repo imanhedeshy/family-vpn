@@ -1,24 +1,31 @@
-# sing-box-for-desktop
+# Family VPN
 
-Experimental Windows client for sing-box, the universal proxy platform.
+A shared Windows VPN client that verifies and privately imports a signed personal
+pass. Maintained by [Iman Hedeshy](https://github.com/imanhedeshy). This GPL-3.0-or-later
+fork retains SagerNet client/core copyright and component license notices.
 
-Linux support is on the way.
+## Development status
 
-## License
+No coordinated installer release is ready. Windows client, engine and native
+sharing component compilation passed locally; installer signing and native
+install/VPN runtime acceptance remain unfinished. macOS, Android, iPhone and iPad
+are part of the coordinated project, but this first public source snapshot covers
+Windows only. The other platform sources and verified installers will follow.
+Source publication and passing source checks are not a usable VPN release.
 
-```
-Copyright (C) 2022 by nekohasekai <contact-sagernet@sekai.icu>
+The root contains the desktop client with its pinned dashboard vendored; `core/`
+contains its Windows-specific sing-box engine. `UPSTREAMS.json` identifies the
+exact upstream commits and reviewed input snapshot. `UPSTREAM-README.md` preserves
+upstream documentation. No personal passes, production endpoints, VPN credentials,
+private keys or local authentication are included. Only the pass verification
+public key belongs in this repository.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+Users import a separate authenticated `.familyvpn` pass. Required OS consent is
+preserved. Reconnect/background/login behavior follows the OS and explicit
+Connect/Disconnect choices; signed deadlines are enforced. Runtime acceptance
+is still pending. This source does not supply a usable VPN service account.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-```
+SignPath Foundation onboarding is being prepared; acceptance/signing are not active.
+If accepted, free code signing will be provided by SignPath.io, certificate by
+SignPath Foundation, with manual release approval. See [SIGNING.md](SIGNING.md),
+[BUILDING.md](BUILDING.md), [PRIVACY.md](PRIVACY.md) and [INSTALLATION.md](INSTALLATION.md).

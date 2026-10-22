@@ -4,8 +4,8 @@ SetFont "Segoe UI" 9
 
 !include WinMessages.nsh
 
-!define INSTALLATION_LAYOUT_REGISTRY_KEY "Software\SagerNet\sing-box"
-!define TAILDROP_VERB_REGISTRY_KEY "Software\Classes\*\shell\Taildrop"
+!define INSTALLATION_LAYOUT_REGISTRY_KEY "Software\AdaTech\FamilyVPN"
+!define TAILDROP_VERB_REGISTRY_KEY "Software\Classes\*\shell\AdaTech.FamilyVPN.Taildrop"
 
 !ifndef BUILD_UNINSTALLER
   !include StrContains.nsh
@@ -676,7 +676,7 @@ FunctionEnd
 !macroend
 
 !macro daemonExecutable OUT
-  StrCpy ${OUT} "$INSTDIR\resources\daemon\sing-box-daemon.exe"
+  StrCpy ${OUT} "$INSTDIR\resources\daemon\family-vpn-daemon.exe"
 !macroend
 
 !macro registerTaildropVerb
@@ -817,7 +817,7 @@ FunctionEnd
   StrCpy $installationFailureTimer ""
   StrCpy $dataMigrationPrepared 0
   SetShellVarContext all
-  StrCpy $daemonDataDirectory "$APPDATA\sing-box-daemon"
+  StrCpy $daemonDataDirectory "$APPDATA\family-vpn-daemon"
   StrCpy $0 0
   ReadRegDWORD $0 HKLM "${INSTALLATION_LAYOUT_REGISTRY_KEY}" "LayoutVersion"
   ${if} $0 == 2
@@ -840,14 +840,14 @@ FunctionEnd
     Pop $installationID
   ${endif}
   ${if} $daemonDataDirectory == ""
-    StrCpy $daemonDataDirectory "$APPDATA\sing-box-daemon"
+    StrCpy $daemonDataDirectory "$APPDATA\family-vpn-daemon"
   ${endif}
   StrCpy $previousApplicationDataDirectory $applicationDataDirectory
   StrCpy $previousDaemonDataDirectory $daemonDataDirectory
   StrCpy $previousInstallationID $installationID
   ${if} $hasExistingInstallation == 0
     ${if} $applicationDataDirectory == ""
-      StrCpy $applicationDataDirectory "$APPDATA\sing-box"
+      StrCpy $applicationDataDirectory "$APPDATA\FamilyVPN"
     ${endif}
     ${GetParameters} $R0
     ClearErrors
@@ -868,20 +868,20 @@ FunctionEnd
     ${endif}
   ${endif}
   ${if} $applicationDataDirectory == ""
-    StrCpy $fixedApplicationDataDirectory "$APPDATA\sing-box"
+    StrCpy $fixedApplicationDataDirectory "$APPDATA\FamilyVPN"
     StrCpy $userIndependentApplicationData ${BST_CHECKED}
   ${else}
     StrCpy $fixedApplicationDataDirectory $applicationDataDirectory
     StrCpy $userIndependentApplicationData ${BST_UNCHECKED}
   ${endif}
   SetShellVarContext current
-  StrCpy $userApplicationDataDirectory "$APPDATA\sing-box"
+  StrCpy $userApplicationDataDirectory "$APPDATA\FamilyVPN"
   SetShellVarContext all
   StrCpy $defaultInstallationDirectory $INSTDIR
   StrCpy $defaultApplicationDataDirectory $applicationDataDirectory
   StrCpy $defaultDaemonDataDirectory $daemonDataDirectory
   StrCpy $workingDirectory $daemonDataDirectory
-  StrCpy $dataTransitionStatePath "$APPDATA\sing-box-installer\data-transition.json"
+  StrCpy $dataTransitionStatePath "$APPDATA\FamilyVPN-installer\data-transition.json"
   InitPluginsDir
   File /oname=$PLUGINSDIR\installer-preflight.ps1 "${BUILD_RESOURCES_DIR}\installer-preflight.ps1"
   File /oname=$PLUGINSDIR\installer-service.ps1 "${BUILD_RESOURCES_DIR}\installer-service.ps1"
@@ -1654,7 +1654,7 @@ FunctionEnd
     ${endif}
   ${endif}
   DetailPrint "$(stoppingService)"
-  nsExec::ExecToLog '"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -NonInteractive -Command "if (Get-Service -Name sing-box-daemon -ErrorAction SilentlyContinue) { Stop-Service -Name sing-box-daemon -Force -ErrorAction Stop; (Get-Service -Name sing-box-daemon).WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped, [TimeSpan]::FromSeconds(10)) }"'
+  nsExec::ExecToLog '"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -NonInteractive -Command "if (Get-Service -Name family-vpn-daemon -ErrorAction SilentlyContinue) { Stop-Service -Name family-vpn-daemon -Force -ErrorAction Stop; (Get-Service -Name family-vpn-daemon).WaitForStatus([System.ServiceProcess.ServiceControllerStatus]::Stopped, [TimeSpan]::FromSeconds(10)) }"'
   Pop $1
   ${if} $1 != 0
     Abort "$(stopServiceFailed)"
@@ -1849,7 +1849,7 @@ FunctionEnd
   StrCpy $applicationDataDirectory ""
   StrCpy $installationID ""
   SetShellVarContext all
-  StrCpy $daemonDataDirectory "$APPDATA\sing-box-daemon"
+  StrCpy $daemonDataDirectory "$APPDATA\family-vpn-daemon"
   StrCpy $0 0
   ReadRegDWORD $0 HKLM "${INSTALLATION_LAYOUT_REGISTRY_KEY}" "LayoutVersion"
   ${if} $0 == 2
@@ -1889,7 +1889,7 @@ FunctionEnd
       ${endif}
       ${if} $applicationDataDirectory == ""
         SetShellVarContext current
-        RMDir /r "$APPDATA\sing-box"
+        RMDir /r "$APPDATA\FamilyVPN"
         SetShellVarContext all
       ${endif}
       !insertmacro setInstallationLayoutRegistryView

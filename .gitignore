@@ -9,3 +9,16 @@ node_modules/
 /signing.local.json
 /CLAUDE.md
 /.claude/
+
+# Private provisioning and release credentials
+*.familyvpn
+*.p12
+*.pfx
+*.keystore
+*.mobileprovision
+.env*
+signing.local.json
+private-provisioning/
+private/
+node_modules/
+release/
